@@ -1,0 +1,1 @@
+Visit: https://linqtolinq.wordpress.com/2012/04/24/setting-up-pthreads-in-windows-under-visual-studio/
