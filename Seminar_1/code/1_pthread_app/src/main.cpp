@@ -4,15 +4,16 @@
 #define HAVE_STRUCT_TIMESPEC
 #include <pthread.h>
 
+#include <chrono>
 #include <cstdint>
 #include <cstdlib>
 #include <cmath>
 
-#define ARRAY_LENGTH    8
-#define ARRAY_MIN_RANGE -1000
-#define ARRAY_MAX_RANGE 1000
+#define ARRAY_LENGTH        100000
+#define ARRAY_MIN_RANGE     -1000
+#define ARRAY_MAX_RANGE     1000
 
-#define NUMBER_OF_THREADS 2
+#define NUMBER_OF_THREADS   4
 
 struct ArgStruct {
     int32_t threadId;
@@ -21,7 +22,9 @@ struct ArgStruct {
     int32_t result;
 };
 
-void* GetPartialSum(void* arguments)
+typedef std::chrono::high_resolution_clock Clock;
+
+void* GetPartialSum(void *arguments)
 {
     auto *args = static_cast<struct ArgStruct *>(arguments);
     auto result = 0;
@@ -45,26 +48,28 @@ void* GetPartialSum(void* arguments)
 
 int32_t main()
 {
-    INFO("[Main] Starting program...\n");
+    DEBUG("[Main] Starting program...\n");
     DEBUG("[Main] ARRAY_LENGTH: %d\n", ARRAY_LENGTH);
     DEBUG("[Main] NUMBER_OF_THREADS: %d\n", NUMBER_OF_THREADS);
 
-    Random random;
+    const Random random;
     struct ArgStruct args[NUMBER_OF_THREADS];
     pthread_t threads[NUMBER_OF_THREADS];
     int32_t array[ARRAY_LENGTH];
 
     auto result = 0;
-    const auto range = static_cast<int>(std::round(static_cast<float>(ARRAY_LENGTH) / NUMBER_OF_THREADS));
+    const auto range = static_cast<int>
+        (std::round(static_cast<float>(ARRAY_LENGTH) / NUMBER_OF_THREADS));
     DEBUG("[Main] Division range: %d\n", range);
 
-    INFO("[Main] Making random array...\n");
-    for (auto i = 0; i < ARRAY_LENGTH; i++)
+    DEBUG("[Main] Making random array...\n");
+    for (auto& num : array)
     {
-        array[i] = random.Next(ARRAY_MIN_RANGE, ARRAY_MAX_RANGE);
-        DEBUG("[Main] array[%u] = %d\n", i, array[i]);
+        num = random.Next(ARRAY_MIN_RANGE, ARRAY_MAX_RANGE);
+        DEBUG("[Main] Adding to array: %d\n", num);
     }
 
+    const auto clockStart = Clock::now();
     for (auto id = 0; id < NUMBER_OF_THREADS; id++)
     {
         args[id].threadId = id;
@@ -75,7 +80,10 @@ int32_t main()
             args[id].arrayEnd = &array[ARRAY_LENGTH - 1];
         }
 
-        const auto rc = pthread_create(&threads[id], nullptr, GetPartialSum, static_cast<void *>(&args[id]));
+        const auto rc = pthread_create(&threads[id],
+                                       nullptr,
+                                       GetPartialSum,
+                                       &args[id]);
         if (rc)
         {
             INFO("[Main] ERROR; return code from pthread_create() is %d\n", rc);
@@ -84,17 +92,22 @@ int32_t main()
     }
 
     DEBUG("[Main] Joining threads!\n");
-    for (auto& t : threads)
+    for (const auto& t : threads)
     {
         pthread_join(t, nullptr);
     }
 
     DEBUG("[Main] Calculating result!\n");
-    for (auto& arg : args)
+    for (const auto& arg : args)
     {
         result += arg.result;
     }
 
+    const auto clockEnd = Clock::now();
+
+    INFO("[Main] Execution time: %lld microsec\n",
+         std::chrono::duration_cast<std::chrono::microseconds>
+                (clockEnd - clockStart).count());
     INFO("[Main] Final result: %d\n", result);
 
     return EXIT_SUCCESS;
