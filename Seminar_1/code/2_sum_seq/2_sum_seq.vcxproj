@@ -23,7 +23,7 @@
     <ProjectGuid>{2CCEFB30-BADC-491C-A86C-5E31AADC9BDB}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>My2sumseq</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
