@@ -87,7 +87,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>../../../3rdPartyTools/pthreads/include;$(IncludePath)</IncludePath>
+    <IncludePath>inc;../../../3rdPartyTools/pthreads/include;$(IncludePath)</IncludePath>
     <LibraryPath>../../../3rdPartyTools/pthreads/lib/x64;$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
@@ -169,11 +169,12 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="src\Random.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Utility\Random.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="inc\Random.hpp" />
+    <ClInclude Include="inc\Utility\Random.hpp" />
+    <ClInclude Include="inc\Utility\Traces.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
