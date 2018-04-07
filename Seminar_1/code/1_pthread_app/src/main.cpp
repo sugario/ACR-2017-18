@@ -59,7 +59,7 @@ int32_t main()
 
     auto result = 0;
     const auto range = static_cast<int>
-        (std::round(static_cast<float>(ARRAY_LENGTH) / NUMBER_OF_THREADS));
+        (static_cast<float>(ARRAY_LENGTH) / NUMBER_OF_THREADS);
     DEBUG("[Main] Division range: %d\n", range);
 
     DEBUG("[Main] Making random array...\n");
@@ -75,7 +75,7 @@ int32_t main()
         args[id].threadId = id;
         args[id].arrayStart = array + id * range;
         args[id].arrayEnd = array + (id + 1) * range - 1;
-        if (args[id].arrayEnd > &array[ARRAY_LENGTH - 1])
+        if (id == NUMBER_OF_THREADS - 1)
         {
             args[id].arrayEnd = &array[ARRAY_LENGTH - 1];
         }
