@@ -74,11 +74,8 @@ int32_t main()
     {
         args[id].threadId = id;
         args[id].arrayStart = array + id * range;
-        args[id].arrayEnd = array + (id + 1) * range - 1;
-        if (id == NUMBER_OF_THREADS - 1)
-        {
-            args[id].arrayEnd = &array[ARRAY_LENGTH - 1];
-        }
+        (id == NUMBER_OF_THREADS - 1) ? args[id].arrayEnd = &array[ARRAY_LENGTH - 1]
+                                      : args[id].arrayEnd = array + (id + 1) * range - 1;
 
         const auto rc = pthread_create(&threads[id],
                                        nullptr,
