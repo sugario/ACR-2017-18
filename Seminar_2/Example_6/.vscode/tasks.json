@@ -1,0 +1,48 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build",
+            "type": "process",
+            "command": "build.bat",
+            "options": {
+                "cwd": "${workspaceFolder}/.vscode"
+            },
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Clean",
+            "type": "process",
+            "command": "clean.bat",
+            "options": {
+                "cwd": "${workspaceFolder}/.vscode"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Run",
+            "type": "process",
+            "command": "run.bat",
+            "args": [
+                "${workspaceFolderBasename}"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/.vscode"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "CppCheck",
+            "type": "process",
+            "command": "cppcheck.bat",
+            "options": {
+                "cwd": "${workspaceFolder}/.vscode"
+            },
+            "problemMatcher": []
+        }
+    ]
+}
