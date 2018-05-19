@@ -1,3 +1,0 @@
-"C:\Program Files\CMake\bin\cmake.exe" -E remove -f CMakeFiles\Example_3.dir/objects.a
-D:\mingw-w64\mingw64\bin\ar.exe cr CMakeFiles\Example_3.dir/objects.a @CMakeFiles\Example_3.dir\objects1.rsp
-D:\mingw-w64\mingw64\bin\g++.exe    -Wl,--whole-archive CMakeFiles\Example_3.dir/objects.a -Wl,--no-whole-archive  -o Example_3.exe -Wl,--out-implib,libExample_3.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\Example_3.dir\linklibs.rsp
