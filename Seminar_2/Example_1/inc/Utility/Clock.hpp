@@ -5,11 +5,11 @@
 
 class Clock {
  public:
-    Clock();
+    Clock() noexcept;
 
-    void Start();
-    int64_t ElapsedMiliSeconds();
-    int64_t ElapsedNanoSeconds();
+    void Start() noexcept;
+    int64_t ElapsedMiliSeconds() const noexcept;
+    int64_t ElapsedNanoSeconds() const noexcept;
 
  private:
     std::chrono::time_point<std::chrono::system_clock> StartTime;

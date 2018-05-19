@@ -24,7 +24,7 @@ int32_t main() {
         arr[(i * 16) % ARR_LENGTH]++;
     }
 
-    int64_t elapsedNS = clock.ElapsedNanoSeconds();
+    const auto elapsedNS = clock.ElapsedNanoSeconds();
     INFO("Time per element: %lld ns\n", elapsedNS / ARR_LENGTH);
 
     delete[] arr;

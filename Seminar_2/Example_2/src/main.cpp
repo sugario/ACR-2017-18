@@ -12,12 +12,12 @@
 #define L3_CACHE_SIZE   (9U * MEGABYTE)
 #define ARR_LENGTH      (L3_CACHE_SIZE)
 
-#define INCREMENT (512U)
+#define INCREMENT       (512U)
 
 int32_t main() {
     Clock clock;
     auto *arr = new int32_t[ARR_LENGTH]();
-    auto K = INCREMENT;
+    const auto K = INCREMENT;
 
     clock.Start();
     for (auto i = 0U; i < ARR_LENGTH; i += K) {
