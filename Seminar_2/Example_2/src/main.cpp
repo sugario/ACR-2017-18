@@ -4,9 +4,13 @@
 #include <cstdint>
 #include <cstdlib>
 
-#define KILOBYTE (1024U)
-#define MEGABYTE (1024U * KILOBYTE)
-#define ARR_LENGTH (64U * MEGABYTE)
+#define BIT             (1U)
+#define BYTE            (8U * BIT)
+#define KILOBYTE        (1024U * BYTE)
+#define MEGABYTE        (1024U * KILOBYTE)
+
+#define L3_CACHE_SIZE   (9U * MEGABYTE)
+#define ARR_LENGTH      (L3_CACHE_SIZE)
 
 #define INCREMENT (512U)
 
@@ -19,7 +23,7 @@ int32_t main() {
     for (auto i = 0U; i < ARR_LENGTH; i += K) {
         arr[i] *= 3;
     }
-    INFO("Loop: %lld ms\n", clock.Elapsed());
+    INFO("Loop: %lld ms\n", clock.ElapsedMiliSeconds());
 
     delete[] arr;
 

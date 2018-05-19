@@ -1,0 +1,30 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../inc/Utility/Clock.hpp
+chrono
+-
+
+../inc/Utility/Traces.hpp
+cstdio
+-
+
+D:/repo/ACR-2017-18/Seminar_2/Example_3/src/Utility/Clock.cpp
+Utility/Clock.hpp
+D:/repo/ACR-2017-18/Seminar_2/Example_3/src/Utility/Utility/Clock.hpp
+
+D:/repo/ACR-2017-18/Seminar_2/Example_3/src/main.cpp
+Utility/Clock.hpp
+-
+Utility/Traces.hpp
+-
+cstdint
+-
+cstdlib
+-
+

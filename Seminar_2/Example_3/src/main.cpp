@@ -10,23 +10,22 @@
 #define MEGABYTE        (1024U * KILOBYTE)
 
 #define L3_CACHE_SIZE   (9U * MEGABYTE)
-#define ARR_LENGTH      (L3_CACHE_SIZE)
+#define ARR_LENGTH        (32U * KILOBYTE)
 
 int32_t main() {
     Clock clock;
+
+    const auto steps = L3_CACHE_SIZE;
     auto *arr = new int32_t[ARR_LENGTH]();
 
+    INFO("Array size: %u\n", ARR_LENGTH);
     clock.Start();
-    for (auto i = 0U; i < ARR_LENGTH; i++) {
-        arr[i] *= 3;
+    for (auto i = 0U; i < steps; i++) {
+        arr[(i * 16) % ARR_LENGTH]++;
     }
-    INFO("Loop_1: %lld ms\n", clock.ElapsedMiliSeconds());
 
-    clock.Start();
-    for (auto i = 0U; i < ARR_LENGTH; i += 16) {
-        arr[i] *= 3;
-    }
-    INFO("Loop_2: %lld ms\n", clock.ElapsedMiliSeconds());
+    int64_t elapsedNS = clock.ElapsedNanoSeconds();
+    INFO("Time per element: %lld ns\n", elapsedNS / ARR_LENGTH);
 
     delete[] arr;
 

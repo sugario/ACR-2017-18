@@ -8,7 +8,8 @@ class Clock {
     Clock();
 
     void Start();
-    int64_t Elapsed();
+    int64_t ElapsedMiliSeconds();
+    int64_t ElapsedNanoSeconds();
 
  private:
     std::chrono::time_point<std::chrono::system_clock> StartTime;
