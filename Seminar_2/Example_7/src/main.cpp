@@ -4,9 +4,9 @@
 #include <cstdint>
 #include <cstdlib>
 
-uint32_t A, B, C, D, E, F, G;
+volatile uint32_t A, B, C, D, E, F, G;
 
-void WeirdnessABCD() noexcept {
+static void WeirdnessABCD() noexcept {
     for (auto i = 0U; i < 200000000U; i++) {
         A++;
         B++;
@@ -15,7 +15,7 @@ void WeirdnessABCD() noexcept {
     }
 }
 
-void WeirdnessACEG() noexcept {
+static void WeirdnessACEG() noexcept {
     for (auto i = 0U; i < 200000000U; i++) {
         A++;
         C++;
@@ -24,7 +24,7 @@ void WeirdnessACEG() noexcept {
     }
 }
 
-void WeirdnessAC() noexcept {
+static void WeirdnessAC() noexcept {
     for (auto i = 0U; i < 200000000U; i++) {
         A++;
         C++;
