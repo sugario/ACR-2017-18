@@ -9,10 +9,10 @@
 #define KILOBYTE        (1024U * BYTE)
 #define MEGABYTE        (1024U * KILOBYTE)
 
-#define L3_CACHE_SIZE   (9U * MEGABYTE)
-#define ARR_LENGTH      (L3_CACHE_SIZE)
+#define ARR_MEMORY_SIZE (256U * MEGABYTE)
+#define ARR_LENGTH      (ARR_MEMORY_SIZE / (sizeof(int32_t) * BYTE))
 
-#define INCREMENT       (512U)
+#define INCREMENT       (1024U)
 
 int32_t main() {
     Clock clock;
