@@ -22,7 +22,7 @@ int32_t main() {
     Clock clock;
 
     const uint32_t positions1[] = { 0, 1, 2, 3 };
-    const uint32_t positions2[] = { 64, 128, 192, 256 };
+    const uint32_t positions2[] = { 16, 32, 48, 64 };
 
     std::vector<std::thread> threads;
     threads.reserve(NUM_OF_THREADS);
