@@ -45,7 +45,7 @@ int32_t main() noexcept {
     INFO("A++; C++; E++; G++;\t\t%lld ms\n", elapsedTimeMS);
 
     clock.Start();
-    WeirdnessACEG();
+    WeirdnessAC();
     elapsedTimeMS = clock.ElapsedMiliSeconds();
     INFO("A++; C++;\t\t\t%lld ms\n", elapsedTimeMS);
 
