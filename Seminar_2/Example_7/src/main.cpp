@@ -4,7 +4,13 @@
 #include <cstdint>
 #include <cstdlib>
 
-volatile uint32_t A, B, C, D, E, F, G;
+uint32_t A = 0;
+uint32_t B = 0;
+uint32_t C = 0;
+uint32_t D = 0;
+uint32_t E = 0;
+uint32_t F = 0;
+uint32_t G = 0;
 
 static void WeirdnessABCD() noexcept {
     for (auto i = 0U; i < 200000000U; i++) {
