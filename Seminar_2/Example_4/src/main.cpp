@@ -22,14 +22,14 @@ int32_t main() {
         arr[0U]++;
         arr[0U]++;
     }
-    INFO("Elapsed time: %lld ms\n", clock.ElapsedMiliSeconds());
+    INFO("Elapsed time for loop_1: %lld ms\n", clock.ElapsedMiliSeconds());
 
     clock.Start();
     for (auto i = 0U; i < steps; i++) {
         arr[0U]++;
         arr[1U]++;
     }
-    INFO("Elapsed time: %lld ms\n", clock.ElapsedMiliSeconds());
+    INFO("Elapsed time for loop_2: %lld ms\n", clock.ElapsedMiliSeconds());
 
     delete[] arr;
 
