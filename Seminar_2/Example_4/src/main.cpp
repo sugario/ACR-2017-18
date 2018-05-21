@@ -9,7 +9,6 @@
 #define KILOBYTE        (1024U * BYTE)
 #define MEGABYTE        (1024U * KILOBYTE)
 
-#define L3_CACHE_SIZE   (9U * MEGABYTE)
 #define ARR_LENGTH      (2U)
 
 int32_t main() {
