@@ -9,13 +9,14 @@
 #define KILOBYTE        (1024U * BYTE)
 #define MEGABYTE        (1024U * KILOBYTE)
 
-#define L3_CACHE_SIZE   (9U * MEGABYTE)
-#define ARR_LENGTH      (12U * MEGABYTE)
-#define MAX_STEP        (5120U)
+#define ARR_MEMORY_SIZE (24U * MEGABYTE)
+#define ARR_LENGTH      (ARR_MEMORY_SIZE / (sizeof(int32_t) * BYTE))
+
+#define MAX_STEP        (576U)
 
 typedef uint8_t byte;
 
-int64_t UpdateEveryKthByte(byte *arr, const int32_t K) noexcept {
+int64_t UpdateEveryKthByte(byte *arr, const uint32_t K) noexcept {
     Clock clock;
     clock.Start();
 
@@ -42,7 +43,7 @@ int32_t main() {
 
     for (auto step = 0U; step < MAX_STEP; step++) {
         const auto elapsedMiliSeconds = UpdateEveryKthByte(arr, step);
-        INFO("ARR_LEN: %u\tStep:%u\tTime: %lld ms\n", ARR_LENGTH, step, elapsedMiliSeconds);
+        INFO("Step:%u\tTime: %lld ms\n", step, elapsedMiliSeconds);
     }
 
     delete[] arr;
