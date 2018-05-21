@@ -7,7 +7,14 @@
 #include <thread>
 #include <vector>
 
-#define ARR_LENGTH      (1024U)
+#define BIT             (1U)
+#define BYTE            (8U * BIT)
+#define KILOBYTE        (1024U * BYTE)
+#define MEGABYTE        (1024U * KILOBYTE)
+
+#define ARR_MEMORY_SIZE (256U * MEGABYTE)
+#define ARR_LENGTH      (ARR_MEMORY_SIZE / (sizeof(int32_t) * BYTE))
+
 #define NUM_OF_THREADS  (4U)
 
 auto *s_counter = new int32_t[ARR_LENGTH]();
