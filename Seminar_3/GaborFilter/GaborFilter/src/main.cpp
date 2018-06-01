@@ -20,11 +20,21 @@ int32_t main() {
     GaborFilter filter(3, 3);
     filter.RefreshKernel();
 
-    const auto convResult = Convolution::Sequential(image.GetData(),
-                                                    filter.kernel);
-    Image result(convResult);
-    result.FormatItself(CV_8U, 1.0 / 255.0);
-    result.WriteToFile(RESULT_FILE_NAME);
+    // Sequential
+    const auto convResultSequential = Convolution::Sequential(image.GetData(),
+                                                              filter.kernel);
+    Image resultSequential(convResultSequential);
+    resultSequential.FormatItself(CV_8U, 1.0 / 255.0);
+    resultSequential.WriteToFile("resultSequential.png");
+    // !Sequential
+
+    // Parallel
+    const auto convResultParallel = Convolution::Parallel(image.GetData(),
+                                                          filter.kernel);
+    Image resultParallel(convResultParallel);
+    resultParallel.FormatItself(CV_8U, 1.0 / 255.0);
+    resultParallel.WriteToFile("resultParallel.png");
+    // !Sequential
 
     return EXIT_SUCCESS;
 }

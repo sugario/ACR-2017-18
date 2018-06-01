@@ -1,5 +1,11 @@
 #include "Image/Convolution.hpp"
 
+#include <opencv2/core.hpp>
+
+#include <algorithm>
+#include <future>
+#include <vector>
+
 cv::Mat Convolution::Sequential(const cv::Mat& image, const cv::Mat& kernel) {
     auto output = image.clone();
 
@@ -23,5 +29,31 @@ cv::Mat Convolution::Sequential(const cv::Mat& image, const cv::Mat& kernel) {
 }
 
 cv::Mat Convolution::Parallel(const cv::Mat& image, const cv::Mat& kernel) {
-    return image;
+    const auto numberOfThreads = std::max(cv::getNumThreads(), cv::getNumberOfCPUs());
+    const auto splitRowCount = image.rows / (numberOfThreads - 1);
+    cv::Mat output;
+
+    if (numberOfThreads == 1) {
+        return Sequential(image, kernel);
+    }
+
+    std::vector<std::future<cv::Mat>> threads;
+    for (auto i = 1; i < numberOfThreads; i++) {
+        const auto startRow = splitRowCount * (i - 1);
+        auto endRow = splitRowCount * i;
+
+        if (i == numberOfThreads - 1) {
+            endRow = image.rows;
+        }
+
+        auto imagePart = image.rowRange(startRow, endRow);
+        threads.emplace_back(std::async(Sequential, imagePart, kernel));
+    }
+
+    for (auto &thread : threads) {
+        const auto processedImagePart = thread.get();
+        output.push_back(processedImagePart);
+    }
+
+    return output;
 }
