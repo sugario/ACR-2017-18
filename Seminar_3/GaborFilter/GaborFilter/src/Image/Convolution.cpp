@@ -21,3 +21,7 @@ cv::Mat Convolution::Sequential(const cv::Mat& image, const cv::Mat& kernel) {
 
     return output;
 }
+
+cv::Mat Convolution::Parallel(const cv::Mat& image, const cv::Mat& kernel) {
+    return image;
+}
