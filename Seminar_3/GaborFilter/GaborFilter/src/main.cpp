@@ -1,4 +1,5 @@
 #include <Image/Convolution.hpp>
+#include <Image/Convolution_CUDA.cuh>
 #include <Image/Image.hpp>
 #include <Filter/GaborFilter.hpp>
 
@@ -34,7 +35,15 @@ int32_t main() {
     Image resultParallel(convResultParallel);
     resultParallel.FormatItself(CV_8U, 1.0 / 255.0);
     resultParallel.WriteToFile("resultParallel.png");
-    // !Sequential
+    // !Parallel
+
+    // CUDA
+    const auto convResultCUDA = Convolution::CUDA(image.GetData(),
+                                                  filter.kernel);
+    Image resultCUDA(convResultCUDA);
+    resultCUDA.FormatItself(CV_8U, 1.0 / 255.0);
+    resultCUDA.WriteToFile("resultCUDA.png");
+    // !CUDA
 
     return EXIT_SUCCESS;
 }
