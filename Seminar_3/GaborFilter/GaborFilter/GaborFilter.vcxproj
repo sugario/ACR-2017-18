@@ -160,12 +160,14 @@
     <ClCompile Include="src\Image\Convolution.cpp" />
     <ClCompile Include="src\Image\Image.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Utility\Stopwatch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\Image\Convolution.hpp" />
     <ClInclude Include="inc\Filter\FilterProperties.hpp" />
     <ClInclude Include="inc\Filter\GaborFilter.hpp" />
     <ClInclude Include="inc\Image\Image.hpp" />
+    <ClInclude Include="inc\Utility\Stopwatch.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\chart.jpg" />
