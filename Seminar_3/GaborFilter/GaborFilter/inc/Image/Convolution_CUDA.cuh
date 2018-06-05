@@ -4,7 +4,7 @@
 #include <opencv2/core/mat.hpp>
 
 namespace Convolution {
-    cv::Mat CUDA(const cv::Mat &image, const cv::Mat &kernel);
+    cv::Mat CUDA(const cv::Mat image, cv::Mat kernel);
 }
 
 #endif  // !IMAGE_CONVOLUTIONCUDA_HPP
