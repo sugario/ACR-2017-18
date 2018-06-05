@@ -6,26 +6,37 @@
 #include <future>
 #include <vector>
 
-cv::Mat Convolution::Sequential(const cv::Mat& image, const cv::Mat& kernel) {
+cv::Mat Convolution::Sequential(const cv::Mat& image, const cv::Mat& kernel, struct Thread thread) {
     auto output = image.clone();
+    if (thread.step == NO_THREAD_STEP) {
+        thread.step = image.rows;
+    }
 
     const auto kernelCenterRow = (kernel.rows - 1) / 2;
     const auto kernelCenterColumn = (kernel.cols - 1) / 2;
 
-    for (auto imageRow = kernelCenterRow; imageRow < image.rows - kernelCenterRow; imageRow++) {
-        for (auto imageColumn = kernelCenterColumn; imageColumn < image.cols - kernelCenterColumn; imageColumn++) {
+    for (auto imageRow = thread.id * thread.step; imageRow < (thread.id + 1) * thread.step; imageRow++) {
+        for (auto imageColumn = 0; imageColumn < image.cols; imageColumn++) {
             auto sum = 0.0F;
             for (auto kernelRow = -kernelCenterRow; kernelRow <= kernelCenterRow; kernelRow++) {
                 for (auto kernelColumn = -kernelCenterColumn; kernelColumn <= kernelCenterColumn; kernelColumn++) {
+                    if (imageRow + kernelRow <= 0 ||
+                        imageRow + kernelRow >= image.rows ||
+                        imageColumn + kernelColumn <= 0 ||
+                        imageColumn + kernelColumn >= image.cols) {
+                        continue;
+                    }
+
                     sum += kernel.at<float>(kernelRow + kernelCenterRow, kernelColumn + kernelCenterColumn) *
                            image.at<float>(imageRow + kernelRow, imageColumn + kernelColumn);
                 }
             }
+
             output.at<float>(imageRow, imageColumn) = sum;
         }
     }
 
-    return output;
+    return output.rowRange(thread.id * thread.step, (thread.id + 1) * thread.step);
 }
 
 cv::Mat Convolution::Parallel(const cv::Mat& image, const cv::Mat& kernel) {
@@ -33,21 +44,10 @@ cv::Mat Convolution::Parallel(const cv::Mat& image, const cv::Mat& kernel) {
     const auto splitRowCount = image.rows / (numberOfThreads - 1);
     cv::Mat output;
 
-    if (numberOfThreads == 1) {
-        return Sequential(image, kernel);
-    }
-
     std::vector<std::future<cv::Mat>> threads;
-    for (auto i = 1; i < numberOfThreads; i++) {
-        const auto startRow = splitRowCount * (i - 1);
-        auto endRow = splitRowCount * i;
-
-        if (i == numberOfThreads - 1) {
-            endRow = image.rows;
-        }
-
-        auto imagePart = image.rowRange(startRow, endRow);
-        threads.emplace_back(std::async(Sequential, imagePart, kernel));
+    for (auto i = 0; i < numberOfThreads - 1; i++) {
+        const struct Thread thread = { i, splitRowCount };
+        threads.emplace_back(std::async(Sequential, image, kernel, thread));
     }
 
     for (auto &thread : threads) {

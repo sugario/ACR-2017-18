@@ -9,6 +9,7 @@
 #define RAINBOW             "assets/rainbow.png"
 #define CHART               "assets/chart.jpg"
 #define SYNTHETIC           "assets/synthetic1.png"
+#define BIG_PICTURE         "assets/big_picture.png"
 
 #define RESULT_FILE_NAME    "result.png"
 
