@@ -84,7 +84,6 @@
     </CudaCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CudaCompile Include="backup\kernel.cu" />
     <CudaCompile Include="src\Image\Convolution_CUDA.cu" />
   </ItemGroup>
   <ItemGroup>
