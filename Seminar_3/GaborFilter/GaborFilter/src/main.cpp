@@ -1,10 +1,14 @@
+#include <Filter/GaborFilter.hpp>
 #include <Image/Convolution.hpp>
 #include <Image/Image.hpp>
-#include <Filter/GaborFilter.hpp>
 #include <Utility/Stopwatch.hpp>
 
+#include <opencv2/core/mat.hpp>
+#include <opencv2/core/hal/interface.h>
+
+#include <cstdio>
 #include <cstdint>
-#include <cstdlib>
+#include <string>
 
 #define EXTRA_SMALL         "assets/xs_3x3.png"
 #define SMALL               "assets/s_128x256.png"
@@ -13,6 +17,12 @@
 #define EXTRA_LARGE         "assets/xl_10315x7049.jpg"
 
 #define PATH_TO_IMAGE       (LARGE)
+
+void SavePng(const cv::Mat &image, const std::string &fileName) {
+    Image result(image);
+    result.FormatItself(CV_8U, 1.0 / 255.0);
+    result.WriteToFile(fileName);
+}
 
 int32_t main() {
     Stopwatch stopwatch;
@@ -24,40 +34,31 @@ int32_t main() {
 
     // Sequential
     stopwatch.Start();
-
     const auto convResultSequential = Convolution::Sequential(image.GetData(),
                                                               filter.kernel);
-    Image resultSequential(convResultSequential);
-    resultSequential.FormatItself(CV_8U, 1.0 / 255.0);
-    resultSequential.WriteToFile("resultSequential.png");
-
     stopwatch.Pause();
+
+    SavePng(convResultSequential, "resultSequential.png");
     printf("Sequential:\t%lld ms\n", stopwatch.ElapsedMiliseconds());
     // !Sequential
 
     // Parallel
     stopwatch.Restart();
-
     const auto convResultParallel = Convolution::Parallel(image.GetData(),
                                                           filter.kernel);
-    Image resultParallel(convResultParallel);
-    resultParallel.FormatItself(CV_8U, 1.0 / 255.0);
-    resultParallel.WriteToFile("resultParallel.png");
-
     stopwatch.Pause();
+
+    SavePng(convResultParallel, "resultParallel.png");
     printf("Parallel:\t%lld ms\n", stopwatch.ElapsedMiliseconds());
     // !Parallel
 
     // CUDA
     stopwatch.Restart();
-
     const auto convResultCUDA = Convolution::Cuda(image.GetData(),
                                                   filter.kernel);
-    Image resultCUDA(convResultCUDA);
-    resultCUDA.FormatItself(CV_8U, 1.0 / 255.0);
-    resultCUDA.WriteToFile("resultCUDA.png");
-
     stopwatch.Pause();
+
+    SavePng(convResultCUDA, "resultCUDA.png");
     printf("CUDA:\t\t%lld ms\n", stopwatch.ElapsedMiliseconds());
     // !CUDA
 
