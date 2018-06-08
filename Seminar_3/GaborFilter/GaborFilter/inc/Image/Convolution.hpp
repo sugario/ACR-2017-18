@@ -3,7 +3,7 @@
 
 #include <opencv2/core/mat.hpp>
 
-namespace Convolution {
+namespace convolution {
     cv::Mat Sequential(const cv::Mat &image, const cv::Mat &kernel);
     cv::Mat Parallel(const cv::Mat &image, const cv::Mat &kernel);
     cv::Mat Cuda(const cv::Mat &image, const cv::Mat &kernel);

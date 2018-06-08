@@ -16,7 +16,7 @@
 #define LARGE               "assets/l_2400x1583.png"
 #define EXTRA_LARGE         "assets/xl_10315x7049.jpg"
 
-#define PATH_TO_IMAGE       (LARGE)
+#define PATH_TO_IMAGE       (MEDIUM)
 
 void SavePng(const cv::Mat &image, const std::string &fileName) {
     Image result(image);
@@ -34,7 +34,7 @@ int32_t main() {
 
     // Sequential
     stopwatch.Start();
-    const auto convResultSequential = Convolution::Sequential(image.GetData(),
+    const auto convResultSequential = convolution::Sequential(image.GetData(),
                                                               filter.kernel);
     stopwatch.Pause();
 
@@ -44,7 +44,7 @@ int32_t main() {
 
     // Parallel
     stopwatch.Restart();
-    const auto convResultParallel = Convolution::Parallel(image.GetData(),
+    const auto convResultParallel = convolution::Parallel(image.GetData(),
                                                           filter.kernel);
     stopwatch.Pause();
 
@@ -54,11 +54,11 @@ int32_t main() {
 
     // CUDA
     stopwatch.Restart();
-    const auto convResultCUDA = Convolution::Cuda(image.GetData(),
+    const auto convResultCuda = convolution::Cuda(image.GetData(),
                                                   filter.kernel);
     stopwatch.Pause();
 
-    SavePng(convResultCUDA, "resultCUDA.png");
+    SavePng(convResultCuda, "resultCUDA.png");
     printf("CUDA:\t\t%lld ms\n", stopwatch.ElapsedMiliseconds());
     // !CUDA
 

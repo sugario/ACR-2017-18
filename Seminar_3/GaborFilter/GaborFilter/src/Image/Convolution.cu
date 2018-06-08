@@ -69,7 +69,7 @@ void CudaConvolve(cv::cuda::PtrStepSz<float> image,
     output.ptr(pixelRow)[pixelColumn] = sum;
 }
 
-cv::Mat Convolution::Cuda(const cv::Mat &image, const cv::Mat &kernel) {
+cv::Mat convolution::Cuda(const cv::Mat &image, const cv::Mat &kernel) {
     auto output = image.clone();
 
     cv::cuda::GpuMat image_d(image);
@@ -94,7 +94,7 @@ cv::Mat Convolution::Cuda(const cv::Mat &image, const cv::Mat &kernel) {
 
 #else
 #pragma message ("CUDA-NOT-SUPPORTED!")
-cv::Mat Convolution::Cuda(const cv::Mat &image, const cv::Mat &kernel) {
+cv::Mat convolution::Cuda(const cv::Mat &image, const cv::Mat &kernel) {
     return cv::Mat(image.rows, image.cols, CV_32F, cv::Scalar(0, 0, 0));
 }
 #endif

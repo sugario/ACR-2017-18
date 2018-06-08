@@ -7,8 +7,8 @@
 #include <future>
 #include <vector>
 
-#define NO_THREAD            0
-#define NO_THREAD_STEP      -1
+#define NO_THREAD             0
+#define NO_THREAD_STEP      (-1)
 
 struct Thread {
     int32_t id;
@@ -56,11 +56,11 @@ cv::Mat Convolve(const cv::Mat& image, const cv::Mat& kernel, struct Thread thre
     return output.rowRange(thread.id * thread.step, (thread.id + 1) * thread.step);
 }
 
-cv::Mat Convolution::Sequential(const cv::Mat& image, const cv::Mat& kernel) {
+cv::Mat convolution::Sequential(const cv::Mat& image, const cv::Mat& kernel) {
     return Convolve(image, kernel, { NO_THREAD, NO_THREAD_STEP });
 }
 
-cv::Mat Convolution::Parallel(const cv::Mat& image, const cv::Mat& kernel) {
+cv::Mat convolution::Parallel(const cv::Mat& image, const cv::Mat& kernel) {
     cv::Mat output;
     const auto numberOfThreads = std::max(cv::getNumThreads(), cv::getNumberOfCPUs()) - 1;
     const auto splitRowCount = static_cast<int>
