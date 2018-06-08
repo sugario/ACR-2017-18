@@ -7,12 +7,13 @@
 #include <cstdint>
 #include <cstdlib>
 
-#define RAINBOW             "assets/rainbow.png"
-#define CHART               "assets/chart.jpg"
-#define SYNTHETIC           "assets/synthetic1.png"
-#define BIG_PICTURE         "assets/big_picture.png"
+#define EXTRA_SMALL         "assets/xs_3x3.png"
+#define SMALL               "assets/s_128x256.png"
+#define MEDIUM              "assets/m_1920x1080.png"
+#define LARGE               "assets/l_2400x1583.png"
+#define EXTRA_LARGE         "assets/xl_10315x7049.jpg"
 
-#define PATH_TO_IMAGE       (RAINBOW)
+#define PATH_TO_IMAGE       (LARGE)
 
 int32_t main() {
     Stopwatch stopwatch;

@@ -53,7 +53,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;WIN64;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;WIN64;__CUDACC__;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -70,7 +70,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;WIN64;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;WIN64;__CUDACC__;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -104,16 +104,15 @@
     <ClInclude Include="inc\Utility\Stopwatch.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="assets\chart.jpg" />
-    <Image Include="assets\rainbow.png" />
-    <Image Include="assets\synthetic1.png" />
+    <Image Include="assets\l_2400x1583.png" />
+    <Image Include="assets\m_1920x1080.png" />
+    <Image Include="assets\s_128x256.png" />
+    <Image Include="assets\xl_10315x7049.jpg" />
+    <Image Include="assets\xs_3x3.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 9.2.targets" />
-    <Import Project="..\packages\vcpkg-export-20180602-172416.1.0.0\build\native\vcpkg-export-20180602-172416.targets" Condition="Exists('..\packages\vcpkg-export-20180602-172416.1.0.0\build\native\vcpkg-export-20180602-172416.targets')" />
-    <Import Project="..\packages\vcpkg-export-20180602-173840.1.0.0\build\native\vcpkg-export-20180602-173840.targets" Condition="Exists('..\packages\vcpkg-export-20180602-173840.1.0.0\build\native\vcpkg-export-20180602-173840.targets')" />
-    <Import Project="..\packages\vcpkg-export-20180602-175513.1.0.0\build\native\vcpkg-export-20180602-175513.targets" Condition="Exists('..\packages\vcpkg-export-20180602-175513.1.0.0\build\native\vcpkg-export-20180602-175513.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
