@@ -1,7 +1,7 @@
 # *SETUP USING VCPKG*
 #### Prerequisite:
  1) Latest [CUDA 9.2](https://developer.nvidia.com/cuda-downloads?target_os=Windows&target_arch=x86_64&target_version=10) installed
- 2) Visual Studio 2015 (or VS 2017 with toolkit v140 installed (VS 2017 toolkit v141 not supported by CUDA)
+ 2) Visual Studio 2015 (or VS 2017 with toolkit v140 installed; VS 2017 toolkit v141 not supported by CUDA)
 #### Pre-steps (get fresh vcpkg):
 >cd ACR-2017-18/Seminar_3/*
 
