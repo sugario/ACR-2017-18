@@ -25,6 +25,10 @@ cv::Mat Convolve(const cv::Mat& image, const cv::Mat& kernel, struct Thread thre
     const auto kernelCenterColumn = (kernel.cols - 1) / 2;
 
     for (auto imageRow = thread.id * thread.step; imageRow < (thread.id + 1) * thread.step; imageRow++) {
+        if (imageRow >= image.rows) {
+            break;
+        }
+
         for (auto imageColumn = 0; imageColumn < image.cols; imageColumn++) {
             auto sum = 0.0F;
             for (auto kernelRow = -kernelCenterRow; kernelRow <= kernelCenterRow; kernelRow++) {
@@ -45,6 +49,10 @@ cv::Mat Convolve(const cv::Mat& image, const cv::Mat& kernel, struct Thread thre
         }
     }
 
+    if ((thread.id + 1) * thread.step > image.rows) {
+        return output.rowRange(thread.id * thread.step, image.rows);
+    }
+
     return output.rowRange(thread.id * thread.step, (thread.id + 1) * thread.step);
 }
 
@@ -53,12 +61,13 @@ cv::Mat Convolution::Sequential(const cv::Mat& image, const cv::Mat& kernel) {
 }
 
 cv::Mat Convolution::Parallel(const cv::Mat& image, const cv::Mat& kernel) {
-    const auto numberOfThreads = std::max(cv::getNumThreads(), cv::getNumberOfCPUs());
-    const auto splitRowCount = image.rows / (numberOfThreads - 1);
     cv::Mat output;
+    const auto numberOfThreads = std::max(cv::getNumThreads(), cv::getNumberOfCPUs()) - 1;
+    const auto splitRowCount = static_cast<int>
+        (std::ceil(static_cast<double>(image.rows) / numberOfThreads));
 
     std::vector<std::future<cv::Mat>> threads;
-    for (auto i = 0; i < numberOfThreads - 1; i++) {
+    for (auto i = 0; i < numberOfThreads; i++) {
         const struct Thread thread = { i, splitRowCount };
         threads.emplace_back(std::async(Convolve, image, kernel, thread));
     }
