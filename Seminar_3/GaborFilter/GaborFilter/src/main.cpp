@@ -1,5 +1,4 @@
 #include <Image/Convolution.hpp>
-#include <Image/Convolution_CUDA.cuh>
 #include <Image/Image.hpp>
 #include <Filter/GaborFilter.hpp>
 #include <Utility/Stopwatch.hpp>
@@ -52,7 +51,7 @@ int32_t main() {
     // CUDA
     stopwatch.Restart();
 
-    const auto convResultCUDA = Convolution::CUDA(image.GetData(),
+    const auto convResultCUDA = Convolution::Cuda(image.GetData(),
                                                   filter.kernel);
     Image resultCUDA(convResultCUDA);
     resultCUDA.FormatItself(CV_8U, 1.0 / 255.0);

@@ -84,7 +84,7 @@
     </CudaCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CudaCompile Include="src\Image\Convolution_CUDA.cu" />
+    <CudaCompile Include="src\Image\Convolution.cu" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Filter\FilterProperties.cpp" />
@@ -98,7 +98,6 @@
     <ClInclude Include="inc\Filter\FilterProperties.hpp" />
     <ClInclude Include="inc\Filter\GaborFilter.hpp" />
     <ClInclude Include="inc\Image\Convolution.hpp" />
-    <ClInclude Include="inc\Image\Convolution_CUDA.cuh" />
     <ClInclude Include="inc\Image\Image.hpp" />
     <ClInclude Include="inc\Utility\Stopwatch.hpp" />
   </ItemGroup>

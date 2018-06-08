@@ -1,12 +1,21 @@
 #include "Image/Convolution.hpp"
 
-#include <opencv2/core.hpp>
+#include <opencv2/core/mat.hpp>
+#include <opencv2/core/utility.hpp>
 
 #include <algorithm>
 #include <future>
 #include <vector>
 
-cv::Mat Convolution::Sequential(const cv::Mat& image, const cv::Mat& kernel, struct Thread thread) {
+#define NO_THREAD            0
+#define NO_THREAD_STEP      -1
+
+struct Thread {
+    int32_t id;
+    int32_t step;
+};
+
+cv::Mat Convolve(const cv::Mat& image, const cv::Mat& kernel, struct Thread thread) {
     auto output = image.clone();
     if (thread.step == NO_THREAD_STEP) {
         thread.step = image.rows;
@@ -39,6 +48,10 @@ cv::Mat Convolution::Sequential(const cv::Mat& image, const cv::Mat& kernel, str
     return output.rowRange(thread.id * thread.step, (thread.id + 1) * thread.step);
 }
 
+cv::Mat Convolution::Sequential(const cv::Mat& image, const cv::Mat& kernel) {
+    return Convolve(image, kernel, { NO_THREAD, NO_THREAD_STEP });
+}
+
 cv::Mat Convolution::Parallel(const cv::Mat& image, const cv::Mat& kernel) {
     const auto numberOfThreads = std::max(cv::getNumThreads(), cv::getNumberOfCPUs());
     const auto splitRowCount = image.rows / (numberOfThreads - 1);
@@ -47,7 +60,7 @@ cv::Mat Convolution::Parallel(const cv::Mat& image, const cv::Mat& kernel) {
     std::vector<std::future<cv::Mat>> threads;
     for (auto i = 0; i < numberOfThreads - 1; i++) {
         const struct Thread thread = { i, splitRowCount };
-        threads.emplace_back(std::async(Sequential, image, kernel, thread));
+        threads.emplace_back(std::async(Convolve, image, kernel, thread));
     }
 
     for (auto &thread : threads) {

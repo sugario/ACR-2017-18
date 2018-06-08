@@ -1,30 +1,45 @@
-#include "Image/Convolution_CUDA.cuh"
+#include "Image/Convolution.hpp"
 
+#ifdef __CUDACC__
 #include <cuda.h>
 #include <cuda_runtime.h>
 #include <device_launch_parameters.h>
 
-#include <opencv2/opencv.hpp>
+#include <opencv2/core/cuda.hpp>
+#include <opencv2/core/cuda_types.hpp>
+#endif
+
+#include <opencv2/core/mat.hpp>
+#include <opencv2/core/types.hpp>
+
+#include <cstdint>
+#include <cstdio>
+
+#ifdef __CUDACC__
 
 #define BLOCK_SIZE      16
-
 #define GPU_ERROR_CHECK(ans) { GpuAssert((ans), __FILE__, __LINE__); }
-inline void GpuAssert(const cudaError_t code, const char *file, const int32_t line, const bool abort = true) {
-    if (code != cudaSuccess) {
-        fprintf(stderr,
-                "GpuAssert: %s %s %d\n",
-                cudaGetErrorString(code),
-                file,
-                line);
 
-        if (abort) {
-            exit(code);
-        }
+inline void GpuAssert(const cudaError_t code,
+                      const char *file,
+                      const int32_t line) {
+    if (code == cudaSuccess) {
+        return;
     }
+
+    fprintf(stderr,
+            "GpuAssert: %s %s %d\n",
+            cudaGetErrorString(code),
+            file,
+            line);
+
+    exit(code);
 }
 
 __global__
-void CUDAKernel(cv::cuda::PtrStepSz<float> image, cv::cuda::PtrStepSz<float> output, cv::cuda::PtrStepSz<float> kernel) {
+void CudaConvolve(cv::cuda::PtrStepSz<float> image,
+                  cv::cuda::PtrStepSz<float> output,
+                  cv::cuda::PtrStepSz<float> kernel) {
     const auto pixelRow = threadIdx.y + blockIdx.y * blockDim.y;
     const auto pixelColumn = threadIdx.x + blockIdx.x * blockDim.x;
 
@@ -54,7 +69,7 @@ void CUDAKernel(cv::cuda::PtrStepSz<float> image, cv::cuda::PtrStepSz<float> out
     output.ptr(pixelRow)[pixelColumn] = sum;
 }
 
-cv::Mat Convolution::CUDA(cv::Mat image, cv::Mat kernel) {
+cv::Mat Convolution::Cuda(const cv::Mat &image, const cv::Mat &kernel) {
     auto output = image.clone();
 
     cv::cuda::GpuMat image_d(image);
@@ -64,7 +79,7 @@ cv::Mat Convolution::CUDA(cv::Mat image, cv::Mat kernel) {
     dim3 threadsPerBlock(BLOCK_SIZE, BLOCK_SIZE);
     dim3 numBlocks(ceil((float)image.cols / threadsPerBlock.x), ceil((float)image.rows / threadsPerBlock.y));
 
-    CUDAKernel <<<numBlocks, threadsPerBlock>>>(image_d, output_d, kernel_d);
+    CudaConvolve<<<numBlocks, threadsPerBlock>>>(image_d, output_d, kernel_d);
     GPU_ERROR_CHECK(cudaPeekAtLastError());
     GPU_ERROR_CHECK(cudaDeviceSynchronize());
 
@@ -76,3 +91,10 @@ cv::Mat Convolution::CUDA(cv::Mat image, cv::Mat kernel) {
 
     return output;
 }
+
+#else
+#pragma message ("CUDA-NOT-SUPPORTED!")
+cv::Mat Convolution::Cuda(const cv::Mat &image, const cv::Mat &kernel) {
+    return cv::Mat(image.rows, image.cols, CV_32F, cv::Scalar(0, 0, 0));
+}
+#endif
