@@ -4,6 +4,7 @@
 #include <Filter/FilterProperties.hpp>
 
 #include <opencv2/core/mat.hpp>
+#include <opencv2/core/types.hpp>
 
 #include <cstdint>
 

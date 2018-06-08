@@ -1,9 +1,10 @@
 #include "Filter/GaborFilter.hpp"
 
-#include <opencv2/core/mat.hpp>
+#include <opencv2/core/hal/interface.h>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/core/types.hpp>
 
-#define DEFAULT_KERNEL_SIZE 3U
+#define DEFAULT_KERNEL_SIZE     3U
 
 GaborFilter::GaborFilter() {
     this->m_Size.height = DEFAULT_KERNEL_SIZE;
@@ -18,7 +19,8 @@ GaborFilter::GaborFilter(const cv::Size &size) {
     RefreshKernel();
 }
 
-GaborFilter::GaborFilter(const int32_t kernelRowsSize, const int32_t kernelColumnsSize) {
+GaborFilter::GaborFilter(const int32_t kernelRowsSize,
+                         const int32_t kernelColumnsSize) {
     this->m_Size.height = kernelRowsSize;
     this->m_Size.width = kernelColumnsSize;
 
