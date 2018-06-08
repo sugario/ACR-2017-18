@@ -16,10 +16,8 @@
 #include <cstdio>
 
 #ifdef __CUDACC__
-
-#define BLOCK_SIZE      16
+#define BLOCK_SIZE      16U
 #define GPU_ERROR_CHECK(ans) { GpuAssert((ans), __FILE__, __LINE__); }
-
 inline void GpuAssert(const cudaError_t code,
                       const char *file,
                       const int32_t line) {
@@ -37,9 +35,9 @@ inline void GpuAssert(const cudaError_t code,
 }
 
 __global__
-void CudaConvolve(cv::cuda::PtrStepSz<float> image,
+void CudaConvolve(const cv::cuda::PtrStepSz<float> image,
                   cv::cuda::PtrStepSz<float> output,
-                  cv::cuda::PtrStepSz<float> kernel) {
+                  const cv::cuda::PtrStepSz<float> kernel) {
     const auto pixelRow = threadIdx.y + blockIdx.y * blockDim.y;
     const auto pixelColumn = threadIdx.x + blockIdx.x * blockDim.x;
 
@@ -63,37 +61,32 @@ void CudaConvolve(cv::cuda::PtrStepSz<float> image,
             sum += kernel.ptr(kernelRow + kernelCenterRow)[kernelColumn + kernelCenterColumn] *
                    image.ptr(pixelRow + kernelRow)[pixelColumn + kernelColumn];
         }
-
     }
 
     output.ptr(pixelRow)[pixelColumn] = sum;
 }
 
 cv::Mat convolution::Cuda(const cv::Mat &image, const cv::Mat &kernel) {
-    auto output = image.clone();
-
-    cv::cuda::GpuMat image_d(image);
-    cv::cuda::GpuMat kernel_d(kernel);
-    cv::cuda::GpuMat output_d(output);
+    cv::cuda::GpuMat output_d(image.clone());
 
     dim3 threadsPerBlock(BLOCK_SIZE, BLOCK_SIZE);
-    dim3 numBlocks(ceil((float)image.cols / threadsPerBlock.x), ceil((float)image.rows / threadsPerBlock.y));
+    dim3 numBlocks(static_cast<uint32_t>(std::ceil(static_cast<float>(image.cols) / threadsPerBlock.x)),
+                   static_cast<uint32_t>(std::ceil(static_cast<float>(image.rows) / threadsPerBlock.y)));
 
-    CudaConvolve<<<numBlocks, threadsPerBlock>>>(image_d, output_d, kernel_d);
+    CudaConvolve<<<numBlocks, threadsPerBlock>>>(cv::cuda::GpuMat(image),
+                                                 output_d,
+                                                 cv::cuda::GpuMat(kernel));
     GPU_ERROR_CHECK(cudaPeekAtLastError());
     GPU_ERROR_CHECK(cudaDeviceSynchronize());
 
+    cv::Mat output;
     output_d.download(output);
-
-    image_d.release();
-    kernel_d.release();
     output_d.release();
 
     return output;
 }
-
 #else
-#pragma message ("CUDA-NOT-SUPPORTED!")
+#pragma message("CUDA-NOT-SUPPORTED!")
 cv::Mat convolution::Cuda(const cv::Mat &image, const cv::Mat &kernel) {
     return cv::Mat(image.rows, image.cols, CV_32F, cv::Scalar(0, 0, 0));
 }
