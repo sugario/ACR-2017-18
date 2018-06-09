@@ -1,18 +1,28 @@
-#include <Image/Convolution.hpp>
-#include <Image/Convolution_CUDA.cuh>
-#include <Image/Image.hpp>
 #include <Filter/GaborFilter.hpp>
+#include <Image/Convolution.hpp>
+#include <Image/Image.hpp>
 #include <Utility/Stopwatch.hpp>
 
+#include <opencv2/core/mat.hpp>
+#include <opencv2/core/hal/interface.h>
+
+#include <cstdio>
 #include <cstdint>
-#include <cstdlib>
+#include <string>
 
-#define RAINBOW             "assets/rainbow.png"
-#define CHART               "assets/chart.jpg"
-#define SYNTHETIC           "assets/synthetic1.png"
-#define BIG_PICTURE         "assets/big_picture.png"
+#define EXTRA_SMALL         "assets/xs_3x3.png"
+#define SMALL               "assets/s_128x256.png"
+#define MEDIUM              "assets/m_1920x1080.png"
+#define LARGE               "assets/l_2400x1583.png"
+#define EXTRA_LARGE         "assets/xl_10315x7049.jpg"
 
-#define PATH_TO_IMAGE       (RAINBOW)
+#define PATH_TO_IMAGE       (MEDIUM)
+
+void SavePng(const cv::Mat &image, const std::string &fileName) {
+    Image result(image);
+    result.FormatItself(CV_8U, 1.0 / 255.0);
+    result.WriteToFile(fileName);
+}
 
 int32_t main() {
     Stopwatch stopwatch;
@@ -24,40 +34,31 @@ int32_t main() {
 
     // Sequential
     stopwatch.Start();
-
-    const auto convResultSequential = Convolution::Sequential(image.GetData(),
+    const auto convResultSequential = convolution::Sequential(image.GetData(),
                                                               filter.kernel);
-    Image resultSequential(convResultSequential);
-    resultSequential.FormatItself(CV_8U, 1.0 / 255.0);
-    resultSequential.WriteToFile("resultSequential.png");
-
     stopwatch.Pause();
+
+    SavePng(convResultSequential, "resultSequential.png");
     printf("Sequential:\t%lld ms\n", stopwatch.ElapsedMiliseconds());
     // !Sequential
 
     // Parallel
     stopwatch.Restart();
-
-    const auto convResultParallel = Convolution::Parallel(image.GetData(),
+    const auto convResultParallel = convolution::Parallel(image.GetData(),
                                                           filter.kernel);
-    Image resultParallel(convResultParallel);
-    resultParallel.FormatItself(CV_8U, 1.0 / 255.0);
-    resultParallel.WriteToFile("resultParallel.png");
-
     stopwatch.Pause();
+
+    SavePng(convResultParallel, "resultParallel.png");
     printf("Parallel:\t%lld ms\n", stopwatch.ElapsedMiliseconds());
     // !Parallel
 
     // CUDA
     stopwatch.Restart();
-
-    const auto convResultCUDA = Convolution::CUDA(image.GetData(),
+    const auto convResultCuda = convolution::Cuda(image.GetData(),
                                                   filter.kernel);
-    Image resultCUDA(convResultCUDA);
-    resultCUDA.FormatItself(CV_8U, 1.0 / 255.0);
-    resultCUDA.WriteToFile("resultCUDA.png");
-
     stopwatch.Pause();
+
+    SavePng(convResultCuda, "resultCUDA.png");
     printf("CUDA:\t\t%lld ms\n", stopwatch.ElapsedMiliseconds());
     // !CUDA
 

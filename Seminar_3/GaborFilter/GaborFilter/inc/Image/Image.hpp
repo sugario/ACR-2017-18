@@ -12,7 +12,8 @@ struct Image {
     explicit Image(const std::string &fileName);
     Image(const std::string &fileName, int32_t mode);
 
-    void ReadFromFile(const std::string &fileName, int32_t mode = cv::IMREAD_COLOR);
+    void ReadFromFile(const std::string &fileName,
+                      int32_t mode = cv::IMREAD_COLOR);
     void WriteToFile(const std::string &fileName) const;
 
     cv::Mat Format(int32_t format, double scaleFactor = 1.0) const;

@@ -1,5 +1,9 @@
 #include "Image/Image.hpp"
 
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/core/mat.hpp>
+
+#include <cstdint>
 #include <string>
 
 Image::Image(const cv::Mat& data) {
