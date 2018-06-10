@@ -20,7 +20,6 @@
 
 void SavePng(const cv::Mat &image, const std::string &fileName) {
     Image result(image);
-    result.FormatItself(CV_8U, 1.0 / 255.0);
     result.WriteToFile(fileName);
 }
 
