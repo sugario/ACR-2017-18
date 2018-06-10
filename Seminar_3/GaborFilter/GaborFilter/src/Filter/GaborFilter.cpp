@@ -50,6 +50,14 @@ void GaborFilter::SetPhaseOffset(const double offset) noexcept {
     this->m_Properties.deviation = offset;
 }
 
+void GaborFilter::AdjustWithBandwith(const double bandwith) noexcept {
+    this->m_Properties.deviation = this->m_Properties.wavelength;
+    this->m_Properties.deviation /= PI;
+    this->m_Properties.deviation *= std::sqrt(std::log(2.0) / 2);
+    this->m_Properties.deviation *= std::pow(2, bandwith) + 1;
+    this->m_Properties.deviation /= std::pow(2, bandwith) - 1;
+}
+
 void GaborFilter::RefreshKernel() {
     this->kernel = GetGaborKernel(this->m_Size,
                                   this->m_Properties.deviation,

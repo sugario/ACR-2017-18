@@ -19,6 +19,8 @@ struct GaborFilter {
     void SetSpatialAspectRatio(double ratio) noexcept;
     void SetPhaseOffset(double offset) noexcept;
 
+    void AdjustWithBandwith(double bandwith) noexcept;
+
     void RefreshKernel();
 
     cv::Mat kernel;
