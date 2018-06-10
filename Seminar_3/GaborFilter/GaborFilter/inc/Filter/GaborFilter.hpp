@@ -24,6 +24,13 @@ struct GaborFilter {
     cv::Mat kernel;
 
 private:
+    cv::Mat GetGaborKernel(const cv::Size &size,
+                           double sigma,
+                           double theta,
+                           double lambda,
+                           double gamma,
+                           double psi) const;
+
     cv::Size m_Size;
     FilterProperties m_Properties;
 };
